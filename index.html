@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ShopSense - Product Review Analyzer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .header {
+      background: linear-gradient(90deg, #ffdee9, #b5fffc);
+      padding: 3rem 1rem;
+      text-align: center;
+      border-bottom: 3px solid #dee2e6;
+    }
+
+    .header .row {
+      align-items: center;
+    }
+
+    .header h1 {
+      font-weight: bold;
+      font-size: 2.5rem;
+    }
+
+    .header p {
+      font-size: 1.2rem;
+      color: #555;
+    }
+
+    .header img {
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .card {
+      margin-top: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .form-control:focus {
+      box-shadow: none;
+      border-color: #86b7fe;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .result {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      color: #343a40;
+    }
+
+    footer {
+      background-color: #212529;
+      color: #f8f9fa;
+      padding: 3rem 1rem;
+    }
+
+    footer a {
+      color: #adb5bd;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #ffffff;
+    }
+
+    .footer-title {
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+
+    .newsletter input {
+      border-radius: 0.375rem 0 0 0.375rem;
+    }
+
+    .newsletter button {
+      border-radius: 0 0.375rem 0.375rem 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Section -->
+<div class="header">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-6 text-md-start text-center">
+        <h1><i class="fa-solid fa-cart-shopping me-2"></i>ShopSense</h1>
+        <p>Your smart companion for product insights and recommendations</p>
+      </div>
+      <div class="col-md-6 text-center">
+            <img src="/static/pexels-photo-449559.jpeg" alt="Shopping Mall" class="img-fluid rounded shadow">      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Middle Section -->
+<div class="container">
+  <!-- Sentiment Analysis -->
+  <div class="card p-4">
+    <h4><i class="fa-regular fa-face-smile me-2 text-primary"></i>Sentiment Analysis</h4>
+    <form method="POST" action="/analyze">
+      <div class="mb-3">
+        <label for="comment" class="form-label">Enter a product review:</label>
+        <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="Type your review here..." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Analyze Sentiment</button>
+    </form>
+    {% if comment %}
+      <div class="result">
+        <p><strong>Review:</strong> {{ comment }}</p>
+        <p><strong>Predicted Sentiment:</strong> {{ prediction }}</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Recommendation System -->
+  <div class="card p-4 mt-4">
+    <h4><i class="fa-solid fa-thumbs-up me-2 text-success"></i>Product Recommendation</h4>
+    <form method="POST" action="/recommend">
+      <div class="mb-3">
+        <label for="user_id" class="form-label">Enter your User ID:</label>
+        <input type="number" class="form-control" id="user_id" name="user_id" placeholder="e.g., 101" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Get Recommendations</button>
+    </form>
+    {% if user_id %}
+      <div class="result">
+        <p><strong>Recommendations for User ID {{ user_id }}:</strong></p>
+        <ul>
+          {% for item in recommendations %}
+            <li>Item ID: {{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Bottom Section -->
+<footer class="mt-5">
+  <div class="container">
+    <div class="row text-start">
+      <div class="col-md-3">
+        <h5 class="footer-title">About ShopSense</h5>
+        <p>ShopSense helps shoppers make informed decisions using advanced AI to analyze reviews and recommend personalized products.</p>
+      </div>
+      <div class="col-md-3">
+        <h5 class="footer-title">Quick Links</h5>
+        <ul class="list-unstyled footer-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Analyze Review</a></li>
+          <li><a href="#">Get Recommendations</a></li>
+          <li><a href="#">FAQs</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h5 class="footer-title">Contact</h5>
+        <ul class="list-unstyled footer-links">
+          <li><i class="fa-solid fa-envelope me-2"></i> support@shopsense.com</li>
+          <li><i class="fa-solid fa-phone me-2"></i> +1-800-555-1234</li>
+          <li><i class="fa-solid fa-location-dot me-2"></i> NY, USA</li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h5 class="footer-title">Newsletter</h5>
+        <form class="newsletter d-flex">
+          <input type="email" class="form-control" placeholder="Your email">
+          <button class="btn btn-primary ms-2" type="submit">Subscribe</button>
+        </form>
+        <div class="mt-3">
+          <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
+          <a href="#" class="me-2"><i class="fab fa-instagram fa-lg"></i></a>
+          <a href="#"><i class="fab fa-twitter fa-lg"></i></a>
+        </div>
+      </div>
+    </div>
+    <hr class="mt-4">
+    <p class="text-center mb-0">&copy; 2025 ShopSense. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>
